@@ -1,0 +1,8 @@
+# This is Git's per-user configuration file.
+[user]
+	email = achigarpia@gmail.com
+# Please adapt and uncomment the following lines:
+#	name = María Pía Achiga
+#	email = mpia.achigar@DH.digitalhouse.comm
+[core]
+	autocrlf = false
