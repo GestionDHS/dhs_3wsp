@@ -1,5 +1,6 @@
 //es responsabilidad del juego rellenarlo
-import "../style.css";
+//import "../style.css";
+import "../style_wsp.css";
 // import "../styleActividades.css";
 // import "../styleAnimaciones.css";
 // import { trash, play, stop, restart,standingPerson, runningPerson, code, comment } from "./Iconos";

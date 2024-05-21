@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,8 +17,11 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="../../interpreter/acorn.js"></script>
-    <script type="module" src="../../interpreter/interpreter.js"></script>
+    <!-- <script type="module" src="../interpreter/acorn.js"></script>-->
+       <script type="module">
+        import acorn from '../interpreter/acorn.js';
+        import interpreter from '../interpreter/interpreter.js';
+    </script> 
     <script type="module" src="instancia.js"></script>
     <script type="module" src="resize.js"></script>
   </body>

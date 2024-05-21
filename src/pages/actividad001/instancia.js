@@ -1,24 +1,24 @@
-import { Juego } from "../../clases/Juego";
-import { template } from "../../recursosPaginas/Template";
+// import { Juego } from "../../clases/Juego";
+// import { template } from "../../recursosPaginas/Template";
 import ControladorStandard from "../../bloques/Controlador";
 import customTheme from "../../bloques/CustomTheme";
 import { CustomCategory } from "../../bloques/CustomCategory";
-import {Dhs_personajes} from '../../clases/Dhs-personajes';
+// import {Dhs_personajes} from '../../clases/Dhs-personajes';
 import {generarCoordenadas, configurarYRenderizarToolbox} from '../../Utils/Funciones';
 import {Dhs_Categorias} from '../../clases/Dhs-categorias';
-import { PgEvent } from "../../Utils/pgEvent";
+// import { PgEvent } from "../../utils/pgEvent";
 import { ganarSiPasaTest } from "./test";
-import {ClaseTest} from "../../clases/ClaseTest"
+// import {ClaseTest} from "../../clases/ClaseTest"
 
-const pgEvent = new PgEvent();
-window.onload = pgEvent.getValues();
+// const pgEvent = new PgEvent();
+// window.onload = pgEvent.getValues();
 
 const mensajePGExito = "¡Muy Bien logrado!"
-const miTest= new ClaseTest(mensajePGExito);
+// const miTest= new ClaseTest(mensajePGExito);
 
 document.querySelector("#appActividad").innerHTML = template(``);
 const velocidadInicial = 1000;
-const miJuego = new Juego(velocidadInicial);
+// const miJuego = new Juego(velocidadInicial);
 const dimensiones = [7, 7];
 
 const tablero = [
@@ -49,8 +49,8 @@ const datosModal = {
   tipo:"ganador"
 };
 
-miJuego.generarEscenario(dimensiones, 2.5, "#9ca64e");
-miJuego.agregarModal(datosModal);
+// miJuego.generarEscenario(dimensiones, 2.5, "#9ca64e");
+// miJuego.agregarModal(datosModal);
 let conjuntosDePersonajes = [
   {
     estrategia: "fijos",
@@ -83,14 +83,16 @@ let conjuntosDePersonajes = [
  
 ];
 
-miJuego.crearPersonajes(conjuntosDePersonajes);
-miJuego.setearPersonajePrincipal(miJuego.listaDePersonajes[49]);
+// miJuego.crearPersonajes(conjuntosDePersonajes);
+// miJuego.setearPersonajePrincipal(miJuego.listaDePersonajes[49]);
 
 
 
 
 
 // BLOCKLY ------------------------------------------------------
+const miJuego = {}
+const pgEvent = {}
 window.miControlador = new ControladorStandard(miJuego, velocidadInicial,estadoWorkspaceInicial,pgEvent,miTest);
 const categoria=new Dhs_Categorias()
 const categoriaElegida= categoria.obtenerCategoriasNecesarias(["Eventos","Movimientos","Acciones","Repeticiones"])
@@ -103,9 +105,7 @@ const ordenJerarquicoBloques = [
 
 const funcionesAExponer=["moverDerecha","moverAbajo","moverArriba","moverIzquierda","abrirCofre"]
 
-// Test-----
-miTest.setearCallback(ganarSiPasaTest,pgEvent,miJuego.personajePrincipal,miControlador)
-miJuego.personajePrincipal.miTest = miTest
+
 //Comunicacion con PG
 let bloquesPrecargadosJSON = estadoWorkspaceInicial;
 window.addEventListener('message', function(event) {
