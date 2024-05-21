@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style_wsp.css";
 import dh from "./logodhs.png"
 
 document.querySelector("#app").innerHTML = `

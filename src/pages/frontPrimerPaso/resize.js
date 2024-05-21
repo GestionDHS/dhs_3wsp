@@ -35,17 +35,24 @@ for (let r of arrayDeResizers) {
       function resize(e) {
          //let body_width = 100 / document.body.clientWidth;
          let panel_izq_r1_width = 100 / parseFloat(getComputedStyle(cajas.panel_izq_r1, '').width)
+         let panel_body_b_width = 100 / parseFloat(getComputedStyle(cajas.b_bloque_r2, '').width)
+         let panel_body_cod_width = 100 / parseFloat(getComputedStyle(cajas.b_cod_r2, '').width)
          let contenedor_width = 100 / parseFloat(getComputedStyle(cajas.contenedor, '').width)
          if (resizer.id == "r1") {
             //r1 mueve los div bloque_codigo y navegador - r1 divide panel izq de panel derecho
             let left_width = (parseFloat(getComputedStyle(cajas.panel_izq_r1, '').width) + e.movementX) * contenedor_width;
             cajas.panel_izq_r1.style.width = left_width + '%';
             cajas.panel_derecho_r1.style.width = (100 - left_width) + '%';
+            // ventanas.ventana_navegador.style.width = '100%';
+            // ventanas.iframe_navegador_navegador.style.width = '100%';
+            // cajas.b_bloque_r2.style.width = '100%';
+            // cajas.b_cod_r2.style.width = '100%';
             // cajas.panel_izq_r1.style.flex = "1 1 auto"
             // cajas.panel_derecho_r1.style.flex = "1 1 auto"
             miControlador.workspaceHTML && Blockly.svgResize(miControlador.workspaceHTML, left_width)
             miControlador.workspaceCSS && Blockly.svgResize(miControlador.workspaceCSS, left_width)
             miControlador.workspaceJS && Blockly.svgResize(miControlador.workspaceJS, left_width)
+           
          } else {
             //r2 mueve los divs body_bloque y body_codigo
             let left_width = (parseFloat(getComputedStyle(cajas.b_bloque_r2, '').width) + e.movementX) * panel_izq_r1_width;

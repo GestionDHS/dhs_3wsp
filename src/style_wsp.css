@@ -64,7 +64,7 @@
     background-color: rgb(143, 143, 143);
     color:#444444;
   }
-  body {
+  body{
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -72,6 +72,22 @@
     margin: 0;
     user-select: none;
   }
+  /* .body_principal {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    user-select: none;
+  }  
+  .dhs_body {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    user-select: none;
+  } */
   
   main {
     height: 100%;
@@ -299,7 +315,7 @@
     }
   }
   #iframe_navegador{
-    width: 100%;
+    width: 50%;
     height: 50%;
     &>body{
       width: 50%;
