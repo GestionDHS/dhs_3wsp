@@ -1,29 +1,32 @@
 export class Dhs_Categorias {
   tipos = [
     {
-      name: "Eventos",
-      categorystyle: "execute",
+      name: "Estructura",
+      categorystyle: "structure",
     },
     {
-      name: "Repeticiones",
-      categorystyle: "loops",
+      name: "Selectores",
+      categorystyle: "structure",
     },
     {
-      name: "Condicionales",
-      categorystyle: "logic",
+      name: "Contenido",
+      categorystyle: "content",
+    },
+    {
+      name: "Propiedades",
+      categorystyle: "content",
+    },
+    {
+      name: "Contenedores",
+      categorystyle: "boxes",
+    },
+    {
+      name: "Valores",
+      categorystyle: "values",
     },
     {
       name: "Sensores",
       categorystyle: "sensor",
-    },{
-      name: "HTML",
-      categorystyle: "html_blocks",
-    },{
-      name: "CSS",
-      categorystyle: "css_blocks",
-    },{
-      name: "JS",
-      categorystyle: "js_blocks",
     },
     {
       kind:"category",

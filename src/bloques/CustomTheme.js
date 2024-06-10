@@ -1,7 +1,7 @@
 export default Blockly.Theme.defineTheme('themeDH', {
-    'base': Blockly.Themes.Thrasos,
+    'base': Blockly.Themes.Zelos,
     'categoryStyles': {
-        'movement': {
+        'content': {
             'colour': '#757bc8'
         },
         'pencil': {
@@ -10,16 +10,16 @@ export default Blockly.Theme.defineTheme('themeDH', {
         'action': {
             'colour': '#219ebc'
         },
-        'execute': {
+        'structure': {
             'colour': '#ff6392'
         },
         'sensor': {
             'colour': '#375f9e'
         },
-        'logic': {
+        'values': {
             'colour': '#4c97ff'
         },
-        'loops': {
+        'boxes': {
             'colour': '#0fbd8c'
         },
         'procedure': {
@@ -27,11 +27,11 @@ export default Blockly.Theme.defineTheme('themeDH', {
         },
     },
     'blockStyles': {
-        'movement_blocks': {
+        'content_blocks': {
             'colourPrimary': '#757bc8',
             'colourTertiary':'#6065a3'
         },
-        'execute_blocks': {
+        'structure_blocks': {
             'colourPrimary': '#ff6392',
             'colourTertiary':'#d45379'
         },
@@ -47,23 +47,11 @@ export default Blockly.Theme.defineTheme('themeDH', {
             "colourPrimary": "#375f9e",
             'colourTertiary':'#253d63'
         },
-        "logic_blocks": {
+        "values_blocks": {
             "colourPrimary": "#4c97ff",
             'colourTertiary':'#3373cc'
         },
-        "loop_blocks": {
-            "colourPrimary": "#0fbd8c",
-            'colourTertiary':'#0b8e69'
-        },
-        "html_blocks": {
-            "colourPrimary": "#0fbd8c",
-            'colourTertiary':'#0b8e69'
-        },
-        "css_blocks": {
-            "colourPrimary": "#0fbd8c",
-            'colourTertiary':'#0b8e69'
-        },
-        "js_blocks": {
+        "boxes_blocks": {
             "colourPrimary": "#0fbd8c",
             'colourTertiary':'#0b8e69'
         },

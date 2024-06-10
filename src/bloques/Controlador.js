@@ -1,5 +1,8 @@
 import ConfiguradorBloques from "./ConfiguradorBloques";
 import Swal from "sweetalert2";
+import { htmlGenerator } from '../generators/htmlGenerator';
+import { cssGenerator } from '../generators/cssGenerator';
+
 
 class Controlador {
   constructor(
@@ -182,9 +185,9 @@ class Controlador {
           return;
         } else {
           if (!this.debeDetenerEjecucion) {
-            codigoCrudo = this.generarCodigoCrudo("HTML");
-            const codigoHtmlNode = document.getElementById("codigo-html")
-            console.log(codigoCrudo)
+            codigoCrudo = this.generarCodigoCrudo("CSS");
+            const codigoHtmlNode = document.getElementById("codigo-css")
+            // console.log(codigoCrudo)
             const textareaNode = document.createElement('textarea');          
             const mostrarOup = new MostradorOutput(codigoHtmlNode,textareaNode)
             mostrarOup.agregarTexto(codigoCrudo)
@@ -334,23 +337,30 @@ class Controlador {
     let codigoCrudo;
 
     if (todoElWorskpace) {
-      //codigoCrudo = tipo === "HTML" ? Blockly.JavaScript.workspaceToCode(this.workspace[tipo]): Blockly.JavaScript.workspaceToCode(this.workspaceCSS);
-      codigoCrudo = Blockly.JavaScript.workspaceToCode(this.workspace[tipo])
-      //this.generarHTML()
+      // codigoCrudo = tipo === "HTML" ? htmlGenerator.workspaceToCode(this.workspace[tipo]): "";
+      // if (tipo === "HTML") {
+      //   codigoCrudo = htmlGenerator.workspaceToCode(this.workspace[tipo])
+      // }
+      // codigoCrudo = htmlGenerator.workspaceToCode(this.workspace["HTML"])
+      codigoCrudo = cssGenerator.workspaceToCode(this.workspace["CSS"])
+      // this.generarHTML()
     }
     this.setearPrefijoBloques(this.prefijo);
     this.setearSufijoBloques(this.sufijo);
     return codigoCrudo;
   }
-  generarHTML(event) {
-    this.HtmlGenerator = new Blockly.Generator('HTML');
-    var code = this.HtmlGenerator.workspaceToCode(this.workspaceHTML);
-    document.getElementById('codigo-html').innerText = code;
-    document.getElementById('navegador').src = "data:text/html;charset=utf-8," + encodeURIComponent(code);
-  }
+  // generarHTML(event) {
+  //   // this.htmlGenerator = new Blockly.Generator('HTML');
+  //   var code = htmlGenerator.workspaceToCode(this.workspaceHTML);
+  //   document.getElementById('codigo-html').innerText = code;
+  //   // document.getElementById('navegador').src = "data:text/html;charset=utf-8," + encodeURIComponent(code);
+  // }
   mostrarCodigoCrudo() {
+    // if (this.panelCodigoGenerado) {
+    //   this.panelCodigoGenerado.value = this.generarCodigoCrudo("HTML");
+    // }
     if (this.panelCodigoGenerado) {
-      this.panelCodigoGenerado.value = this.generarCodigoCrudo("HTML");
+      this.panelCodigoGenerado.value = this.generarCodigoCrudo("css");
     }
   }
 

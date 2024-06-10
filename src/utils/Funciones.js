@@ -144,11 +144,10 @@ ordenJerarquicoBloques.forEach((bl) => {
 const divWspHTML = document.getElementById(wspARenderizar)
 divWspHTML.innerHTML=""
 divWspHTML.style.width= "100%"
-
-if(tipo === "HTML"){
+  if (tipo === "HTML") {
   miControlador.crearInyectarWorkspace(wspARenderizar, {
     toolbox: miControlador.ConfiguradorBloques.toolboxHTML,
-    renderer: "thrasos",
+    theme: "themeDH",
     zoom: {
       controls: true,
       wheel: true,
@@ -162,7 +161,7 @@ if(tipo === "HTML"){
 if(tipo === "CSS"){
   miControlador.crearInyectarWorkspace(wspARenderizar, {
     toolbox: miControlador.ConfiguradorBloques.toolboxCSS,
-    renderer: "thrasos",
+    theme: "themeDH",
     zoom: {
       controls: true,
       wheel: true,
