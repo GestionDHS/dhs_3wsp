@@ -6,7 +6,7 @@ export class Dhs_Categorias {
     },
     {
       name: "Selectores",
-      categorystyle: "structure",
+      categorystyle: "boxes",
     },
     {
       name: "Contenido",
@@ -25,8 +25,8 @@ export class Dhs_Categorias {
       categorystyle: "values",
     },
     {
-      name: "Sensores",
-      categorystyle: "sensor",
+      name: "Formularios",
+      categorystyle: "forms",
     },
     {
       kind:"category",

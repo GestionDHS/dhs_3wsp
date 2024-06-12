@@ -1,3 +1,23 @@
+// Funciones para pasar hex a rgb y regb a hex
+export function hexToRgb(hex) {
+  hex = hex.replace(/^#/, '');
+  let num = parseInt(hex, 16);
+  let r = (num >> 16) & 255;
+  let g = (num >> 8) & 255;
+  let b = num & 255;
+
+  return [r.toString(), g.toString(), b.toString()];
+}
+
+export function rgbToHex(r, g, b) {
+  const toHex = (n) => {
+      let hex = n.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+  };
+  return `#${toHex(parseInt(r))}${toHex(parseInt(g))}${toHex(parseInt(b))}`;
+}
+
+
 //************FUNCION QUE BUSCA POSICIONES RAMDOM DEL TABLERO*************/
 export function posicionValida(escenario, posicionesElegidas, arrayPosiciones) {
   return arrayPosiciones

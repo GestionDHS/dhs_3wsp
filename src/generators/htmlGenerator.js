@@ -61,6 +61,14 @@ htmlGenerator.forBlock['boxes_block'] = function (block) {
     return code
 }; 
 
+htmlGenerator.forBlock['boxes_name_block'] = function (block) {
+    var tipoCaja = block.getFieldValue('tipoCaja');
+    var nombre = htmlGenerator.valueToCode(block, 'nombre', Order.ATOMIC);
+    var contenidoCaja = htmlGenerator.statementToCode(block, 'contenidoCaja');
+    var code = '<' + tipoCaja + 'class="' + nombre + '">\n' + contenidoCaja + '</' + tipoCaja + '>\n';
+    return code
+}; 
+
 htmlGenerator.forBlock['list_block'] = function (block) {
     var tipoLista = block.getFieldValue('tipoLista');
     var items = htmlGenerator.statementToCode(block, 'items');
@@ -93,7 +101,7 @@ htmlGenerator.forBlock['paragraph_link_block'] = function (block) {
     var enlace = htmlGenerator.statementToCode(block, 'anchor');
     var contenidoFinal = htmlGenerator.valueToCode(block, 'endText', Order.ATOMIC);
     // var contenido = block.getFieldValue('contenidoParrafo');
-    var code = '<p>' + contenidoPrincipio + enlace + contenidoFinal + '</p>\n';
+    var code = '<p>' + contenidoPrincipio + enlace.replace(/\n$/, '') + contenidoFinal + '</p>\n';
     return code
 };
 
@@ -120,9 +128,9 @@ htmlGenerator.forBlock['button_block'] = function (block) {
 };
 
 htmlGenerator.forBlock['input_block'] = function (block) {
-    var inputlabel = htmlGenerator.valueToCode(block, 'inputlabel', Order.ATOMIC);
-    var inputtype = htmlGenerator.valueToCode(block, 'inputtype', Order.ATOMIC);
-    var inputplaceholder = htmlGenerator.valueToCode(block, 'inputplaceholder', Order.ATOMIC);
+    var inputlabel = htmlGenerator.valueToCode(block, 'inputLabel', Order.ATOMIC);
+    var inputtype = htmlGenerator.valueToCode(block, 'inputType', Order.ATOMIC);
+    var inputplaceholder = htmlGenerator.valueToCode(block, 'inputPlaceholder', Order.ATOMIC);
     var code = '<label>' + inputlabel + '</label>\n<input type="' + inputtype + '" placeholder="' + inputplaceholder + '">'
     return code
 };

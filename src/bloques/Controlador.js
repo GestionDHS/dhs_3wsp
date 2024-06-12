@@ -185,8 +185,8 @@ class Controlador {
           return;
         } else {
           if (!this.debeDetenerEjecucion) {
-            codigoCrudo = this.generarCodigoCrudo("CSS");
-            const codigoHtmlNode = document.getElementById("codigo-css")
+            codigoCrudo = this.generarCodigoCrudo("HTML");
+            const codigoHtmlNode = document.getElementById("codigo-html")
             // console.log(codigoCrudo)
             const textareaNode = document.createElement('textarea');          
             const mostrarOup = new MostradorOutput(codigoHtmlNode,textareaNode)
@@ -341,8 +341,8 @@ class Controlador {
       // if (tipo === "HTML") {
       //   codigoCrudo = htmlGenerator.workspaceToCode(this.workspace[tipo])
       // }
-      // codigoCrudo = htmlGenerator.workspaceToCode(this.workspace["HTML"])
-      codigoCrudo = cssGenerator.workspaceToCode(this.workspace["CSS"])
+      codigoCrudo = htmlGenerator.workspaceToCode(this.workspace["HTML"])
+      // codigoCrudo = cssGenerator.workspaceToCode(this.workspace["CSS"])
       // this.generarHTML()
     }
     this.setearPrefijoBloques(this.prefijo);
@@ -360,7 +360,7 @@ class Controlador {
     //   this.panelCodigoGenerado.value = this.generarCodigoCrudo("HTML");
     // }
     if (this.panelCodigoGenerado) {
-      this.panelCodigoGenerado.value = this.generarCodigoCrudo("css");
+      this.panelCodigoGenerado.value = this.generarCodigoCrudo("html");
     }
   }
 

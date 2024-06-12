@@ -92,7 +92,7 @@ cssGenerator.forBlock['property_border_block'] = function (block) {
 cssGenerator.forBlock['property_grid_block'] = function (block) {
     var gridColumns = cssGenerator.valueToCode(block, 'gridColumns', Order.ATOMIC)
     var gap = cssGenerator.valueToCode(block, 'gap', Order.ATOMIC);
-    var code = "grid-temaplate-columns: " + gridColumns + ";\ngap: " + gap + ";\n"
+    var code = "display: grid;\ngrid-temaplate-columns: " + gridColumns + ";\ngap: " + gap + ";\n"
     return code
 };
 
