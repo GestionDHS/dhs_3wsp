@@ -670,9 +670,8 @@ class Controlador {
   // WORKSPACE - GESTION EVENTOS DE CAMBIO
 
   removerEventoCambioWorkspace(eventId,tipo) {
-    this.eventoCambioWorkspaceActual
-      ? this.workspace[tipo].removeChangeListener(eventId)
-      : null;
+    this.eventoCambioWorkspaceActual && this.workspace[tipo].removeChangeListener(eventId)
+   
   }
 
   removerEventoCambioWorkspaceActual() {
@@ -680,11 +679,13 @@ class Controlador {
   }
 
   setearEventoCambioWorkspace(callback,tipo) {
-    this.eventoCambioWorkspaceActual
-      ? this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
-      : null;
-    this.eventoCambioWorkspaceActual =
-    this.workspace[tipo].addChangeListener(callback);
+    // this.eventoCambioWorkspaceActual
+    //   ? this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
+    //   : null;
+    this.eventoCambioWorkspaceActual && this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
+    
+    this.eventoCambioWorkspaceActual = this.workspace[tipo].addChangeListener(callback);
+    console.log(this.eventoCambioWorkspaceActual)
   }
 
   setearEventoCambioWorkspaceStandard(tipo) {
