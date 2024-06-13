@@ -10,16 +10,16 @@ import { template } from "../../utils/Template.js";
 
 
 
-(function () {document.querySelector('#app').innerHTML = template(``)}());
+(function () { document.querySelector('#app').innerHTML = template(``) }());
 
 //Ejercicios
 // BLOCKLY ------------------------------------------------------
 const estadoWorkspaceInicialHTML = "{}";
-const estadoWorkspaceInicialCSS= '{"blocks":{"languageVersion":0,"blocks":[{"type":"styles_block","id":"rwW]g?!-iwJNk))r*~^C","x":160,"y":130}]}}'
+const estadoWorkspaceInicialCSS = '{"blocks":{"languageVersion":0,"blocks":[{"type":"styles_block","id":"rwW]g?!-iwJNk))r*~^C","x":160,"y":130}]}}'
 window.miControlador = new ControladorStandard(estadoWorkspaceInicialHTML);
 const categoriaHTML = new Dhs_Categorias()
-const categoriaCSS= new Dhs_Categorias()
-const categoriaElegidaHtml = categoriaHTML.obtenerCategoriasNecesarias(["Estructura", "Contenedores" ,"Contenido","Formularios", "Valores"])
+const categoriaCSS = new Dhs_Categorias()
+const categoriaElegidaHtml = categoriaHTML.obtenerCategoriasNecesarias(["Estructura", "Contenedores", "Contenido", "Formularios", "Valores"])
 const categoriaElegidaCss = categoriaCSS.obtenerCategoriasNecesarias(["Selectores", "Propiedades", "Valores"])
 const ordenJerarquicoBloques = [
    ["label_estructura", "Estructura"],
@@ -87,20 +87,29 @@ const ordenJerarquicoBloquesCSS = [
    ["grid_dropdown_block", "Valores"],
 ];
 
-configurarYRenderizarToolbox(
-   miControlador,
-   categoriaElegidaHtml,
+// configurarYRenderizarToolbox(
+//    miControlador,
+//    categoriaElegidaHtml,
+//    ordenJerarquicoBloques,
+//    estadoWorkspaceInicialHTML,
+//    "wsp-html",
+//    "HTML",
+//  );
+//  configurarYRenderizarToolbox(
+//    miControlador,
+//    categoriaElegidaCss,
+//    ordenJerarquicoBloquesCSS,
+//    estadoWorkspaceInicialCSS,
+//    "wsp-css",
+//    "CSS"
+//  );
+miControlador.crearInyectarWorkspace(categoriaElegidaHtml,
    ordenJerarquicoBloques,
    estadoWorkspaceInicialHTML,
    "wsp-html",
-   "HTML",
- );
- configurarYRenderizarToolbox(
-   miControlador,
-   categoriaElegidaCss,
+   "HTML")
+miControlador.crearInyectarWorkspace(categoriaElegidaCss,
    ordenJerarquicoBloquesCSS,
    estadoWorkspaceInicialCSS,
    "wsp-css",
-   "CSS"
- );
- 
+   "CSS")

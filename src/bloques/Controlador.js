@@ -2,6 +2,7 @@ import ConfiguradorBloques from "./ConfiguradorBloques";
 import Swal from "sweetalert2";
 import { htmlGenerator } from '../generators/htmlGenerator';
 import { cssGenerator } from '../generators/cssGenerator';
+import ClassWorkspace from "../clases/Class-workspace";
 
 
 class Controlador {
@@ -34,62 +35,27 @@ class Controlador {
     this.desactivaHuerfanos = false;
     // this.estadoWorkspaceActual = null;
 
-    this.workspace={}
+    this.workspaces = {}
     // BOTONES
     this.botonEjecutar = botonEjecutar;
     this.hayBubble = false
     if (this.botonEjecutar) {
       this.botonEjecutar.addEventListener("click", () => {
-        this.inicializarFlags()
-        this.cerrarModalAbierto()
-        this.verificarBloquePadreTengaHijos("on_execute")
-        this.verificarBloquePadreTengaHijos("repeat_times")
-        this.verificarBloquePadreTengaHijos("repeat_until")
-        //this.verificarBloquePadreTengaHijos("repeat_while")
-        this.verificarBloquePadreTengaHijos("if")
-        this.verificarBloquePadreTengaHijos("if_else")
-        this.deshabilitarEdicionWorkspace()
-        this.deshabilitarBotonEjecutar()
-        this.deshabilitarBotonReinicio()
-        this.rehabilitarBotonDetener()
-        !this.hayBubble && this.recorrerPasos(false) // bool: sincronico.
-        this.hayBubble && this.reiniciarEjecucion()
-        this.obtenerEstadoActual()
-        this.limpiarListaDeErrores()
+
 
       });
     }
-    this.botonDetener = botonDetener;
-    if (this.botonDetener) {
-      this.botonDetener.addEventListener("click", () => {
-        this.detenerEjecucion(); // deshabilitaDetener
-        this.rehabilitarBotonEjecutar();
-        this.rehabilitarBotonReinicio();
-        this.habilitarEdicionWorkspace()
-      });
-    }
-    // this.deshabilitarBotonDetener();
 
     this.botonReiniciar = botonReiniciar;
-
     if (this.botonReiniciar) {
       this.botonReiniciar.addEventListener("click", () => {
-        this.inicializarFlags()
-        this.cerrarModalAbierto()
-        this.limpiarListaDeErrores()
-        this.reiniciarEjecucion(); // llama a detenerEjecucion tmb, que deshabilita botonDeneter
-        this.rehabilitarBotonEjecutar();
-        this.deshabilitarBotonReinicio(); // para evitar multiclick
-        setTimeout(() => {
-          // permite volver a reiniciar pasado medio segundo.
-          this.rehabilitarBotonReinicio();
-        }, 1050);
+    
       });
     }
+
     this.botonLimpiarWorkspace = botonLimpiarWorkspace;
     if (this.botonLimpiarWorkspace) {
       this.botonLimpiarWorkspace.addEventListener("click", () => {
-        // Confirm en SweetAlert
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {
             confirmButton: "btn btn-success",
@@ -111,7 +77,7 @@ class Controlador {
               this.detenerEjecucion();
               this.limpiarWorkspace();
               this.tipo = "HTML"
-              this.cargarBloquesSerializados(JSON.parse(this.estadoWorkspaceInicial),tipo);
+              this.cargarBloquesSerializados(JSON.parse(this.estadoWorkspaceInicial), tipo);
               let timerInterval;
               this.setearEstadoInicialWorkspace()
               swalWithBootstrapButtons.fire({
@@ -145,22 +111,14 @@ class Controlador {
       });
       // Fin confirm
     }
-    this.inputAcelerador = inputAcelerador;
-    if (this.inputAcelerador) {
-      this.inputAcelerador?.addEventListener("input", () => {
-        let valor = parseInt(this.inputAcelerador.value);
-        let velocidad = 2500 - valor;
-        this.setearVelocidad(velocidad);
-      });
-    }
-
+ 
     this.inputBloquesSueltos = inputBloquesSueltos;
     if (this.inputBloquesSueltos) {
       inputBloquesSueltos.addEventListener("change", () => {
         if (this.desactivaHuerfanos) {
-          this.inhabilitarDesactivarHuerfanos();
+          this.inhabilitarDesactivarHuerfanos(this.tipo);
         } else {
-          this.habilitarDesactivarHuerfanos();
+          this.habilitarDesactivarHuerfanos(this.tipo);
         }
       });
     }
@@ -188,8 +146,8 @@ class Controlador {
             codigoCrudo = this.generarCodigoCrudo("HTML");
             const codigoHtmlNode = document.getElementById("codigo-html")
             // console.log(codigoCrudo)
-            const textareaNode = document.createElement('textarea');          
-            const mostrarOup = new MostradorOutput(codigoHtmlNode,textareaNode)
+            const textareaNode = document.createElement('textarea');
+            const mostrarOup = new MostradorOutput(codigoHtmlNode, textareaNode)
             mostrarOup.agregarTexto(codigoCrudo)
             document.getElementById('iframe_navegador').src = "data:text/html;charset=utf-8," + encodeURIComponent(codigoCrudo);
             // if (this.panelCodigoGenerado.value != codigoCrudo) {
@@ -207,92 +165,123 @@ class Controlador {
 
   // METODOS PARA EL WORKSPACE - SERIALIZACION
 
-  inicializarFlags() {
-    this.test.ejecucionSincronica = false
-    this.test.ejecutarElTest = true
-    this.juego.setearSincronicidad(true)
-    let divFalso = document.getElementById("elemento-escenario-clonado")
-    let juego = document.querySelector(".juego")
-    divFalso && juego.removeChild(divFalso)
+  crearInyectarWorkspace(categoriaElegida,
+    ordenJerarquicoBloques,
+    bloquesPrecargadosJSON,
+    idElemento,
+    tipo) {
+      categoriaElegida.tipos.forEach((cat) =>
+        this.ConfiguradorBloques.crearCategoriaToolbox(cat, tipo)
+      );
+  
+      ordenJerarquicoBloques.forEach((bl) => {
+        this.ConfiguradorBloques.configurarUnBloqueCustomStandard(...bl, tipo);
+      });
+    const instanciaClassWsp = new ClassWorkspace(idElemento, tipo)
+    this.workspaces[tipo] = instanciaClassWsp
+    this.tipo = tipo
+    instanciaClassWsp.init({
+      toolbox: tipo == "HTML" ? this.ConfiguradorBloques.toolboxHTML: (tipo == "CSS") ? this.ConfiguradorBloques.toolboxCSS: this.ConfiguradorBloques.toolboxJS,
+      theme: "themeDH",
+      zoom: {
+        controls: true,
+        wheel: true,
+        pinch: true,
+      },
+      resize: true,
+      parentWidth: null,
+      parentHeight: null
+    })
 
+    const newWidth = "100%";
+    const newHeight = "100%";
+    console.log(this.workspaces.HTML)
+    console.log(this.workspaces.CSS)
+    this.workspaces.HTML && Blockly.svgResize(this.workspaces.HTML.workspace, newWidth, newHeight);
+    this.workspaces.CSS && Blockly.svgResize(this.workspaces.CSS.workspace, newWidth, newHeight);
+
+
+
+    //this.setearYCargarBloquesIniciales(JSON.parse(bloquesPrecargadosJSON), tipo);
+    this.setearEventoCambioWorkspaceStandard(tipo);
+ 
   }
 
-  crearInyectarWorkspace(idElemento, objetoConfig,tipo) {
-    if(tipo==="HTML"){
-      this.workspaceHTML = Blockly.inject(idElemento, objetoConfig);
-      this.workspace.HTML = this.workspaceHTML
-      
-      // console.log("Created workspaceHTML:"+this.workspaceHTML)
-    }
-    if(tipo==="CSS"){
-      this.workspaceCSS = Blockly.inject(idElemento, objetoConfig)
-      this.workspace.CSS = this.workspaceCSS
-      // console.log("Created workspaceCSS:"+ this.workspaceCSS);
-    }
-    if(tipo==="JS"){
-      this.workspaceJS = Blockly.inject(idElemento, objetoConfig);
-      this.workspace.JS = this.workspaceJS
-    }
+  habilitarEdicionWorkspace(tipo = this.tipo) {
+    this.workspaces[tipo].options.readOnly = false;
   }
 
-  habilitarEdicionWorkspace(tipo ="html") {
-    this.workspace[tipo].options.readOnly = false;
+  deshabilitarEdicionWorkspace(tipo = this.tipo) {
+    this.workspaces[tipo].options.readOnly = true;
   }
 
-  deshabilitarEdicionWorkspace(tipo) {
-    this.workspace[tipo].options.readOnly = true;
+  limpiarWorkspace(tipo = this.tipo) {
+    return this.workspaces[tipo].clear();
   }
-
-  limpiarWorkspace(tipo) {
-    return this.workspace[tipo].clear();
-  }
-  obtenerBloquesSerializados(todoElWorskpace = true,tipo) {
+  obtenerBloquesSerializados(todoElWorskpace = true, tipo) {
     if (todoElWorskpace) {
-      return Blockly.serialization.workspaces.save(this.workspace[tipo]);
+      return Blockly.serialization.workspaces.save(this.workspaces[tipo]);
     }
   }
-  cargarBloquesSerializados(bloquesSerializados,tipo) {
-      return Blockly.serialization.workspaces.load(
-        bloquesSerializados,
-        this.workspace[tipo])
-    
-    // if(tipo==="HTML"){
-    //   return Blockly.serialization.workspaces.load(
-    //     bloquesSerializados,
-    //     this.workspaceHTML)
-    // }
-    // if(tipo==="CSS"){
-    //   return Blockly.serialization.workspaces.load(
-    //     bloquesSerializados,
-    //     this.workspaceCSS)
-    // }
-    // if(tipo==="JS"){
-    //   return Blockly.serialization.workspaces.load(
-    //     bloquesSerializados,
-    //     this.workspaceJS)
-    // }
-   
-    // --load hace el clear previo--
+  cargarBloquesSerializados(bloquesSerializados, tipo) {
+    //Pia -----
+    const state = Blockly.serialization.workspaces.save(this.workspaces[tipo].workspace);
+    return Blockly.serialization.workspaces.load(
+      state,
+      this.workspaces[tipo].workspace)
+    //Fin Pía -----------------
+    // return Blockly.serialization.workspaces.load(
+    //   bloquesSerializados,
+    //   this.workspaces[tipo].workspace)
   }
-  setearYCargarBloquesIniciales(bloquesSerealizados,tipo) {
-    if(tipo==="HTML"){
+  setearYCargarBloquesIniciales(bloquesSerealizados, tipo) {
+    if (tipo === "HTML") {
       //console.log("workspaceHTML before loading:", this.workspaceHTML);
       this.bloquesInicialesHTML = bloquesSerealizados;
-      this.cargarBloquesSerializados(this.bloquesInicialesHTML,tipo);
+      this.cargarBloquesSerializados(this.bloquesInicialesHTML, tipo);
+      
     }
 
-    if(tipo==="CSS"){
+    if (tipo === "CSS") {
       // console.log("workspaceCss before loading:", this.workspaceCSS);
       this.bloquesInicialesCSS = bloquesSerealizados;
-      this.cargarBloquesSerializados(this.bloquesInicialesCSS,tipo);}
-
-    if(tipo==="JS"){
-      this.bloquesInicialesJS = bloquesSerealizados;
-      this.cargarBloquesSerializados(this.bloquesInicialesJS,tipo);
+      this.cargarBloquesSerializados(this.bloquesInicialesCSS, tipo);
+      console.log("y aca")
     }
-    
-  
+
+    if (tipo === "JS") {
+      this.bloquesInicialesJS = bloquesSerealizados;
+      this.cargarBloquesSerializados(this.bloquesInicialesJS, tipo);
+    }
+
+
   }
+
+  // WORKSPACE - GESTION EVENTOS DE CAMBIO
+
+  removerEventoCambioWorkspace(eventId, tipo) {
+    this.eventoCambioWorkspaceActual && this.workspaces[tipo].workspace.removeChangeListener(eventId)
+
+  }
+
+  removerEventoCambioWorkspaceActual() {
+    this.removerEventoCambioWorkspace(this.eventoCambioWorkspaceActual);
+  }
+
+  setearEventoCambioWorkspace(callback, tipo) {
+    // this.eventoCambioWorkspaceActual && this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
+    this.eventoCambioWorkspaceActual && this.workspaces[tipo].workspace.removeChangeListener(this.eventoCambioWorkspaceActual)
+
+    // this.eventoCambioWorkspaceActual = this.workspace[tipo].addChangeListener(callback);
+    this.eventoCambioWorkspaceActual = this.workspaces[tipo].workspace.addChangeListener(callback);
+    console.log(tipo)
+    console.log(this.eventoCambioWorkspaceActual)
+  }
+
+  setearEventoCambioWorkspaceStandard(tipo) {
+    this.setearEventoCambioWorkspace(this.callbackCambioWorkspaceStandard, tipo);
+  }
+
   // verificarUsoDeBloques(bloqueAVerificar) {//devulve array de bloques encontrados
   //   const existeBloque = this.obtenerBloquesSerializados().blocks.blocks.filter(b => b.type == bloqueAVerificar)
   //   return existeBloque
@@ -331,7 +320,7 @@ class Controlador {
 
   // WORKSPACE - GENERACION DE CODIGO Y AFIJACION
 
-  generarCodigoCrudo(todoElWorskpace = true,tipo) {
+  generarCodigoCrudo(todoElWorskpace = true, tipo) {
     this.setearPrefijoBloques(null);
     this.setearSufijoBloques(null);
     let codigoCrudo;
@@ -341,7 +330,7 @@ class Controlador {
       // if (tipo === "HTML") {
       //   codigoCrudo = htmlGenerator.workspaceToCode(this.workspace[tipo])
       // }
-      codigoCrudo = htmlGenerator.workspaceToCode(this.workspace["HTML"])
+      codigoCrudo = htmlGenerator.workspaceToCode(this.workspaces[this.tipo].workspace)
       // codigoCrudo = cssGenerator.workspaceToCode(this.workspace["CSS"])
       // this.generarHTML()
     }
@@ -379,7 +368,7 @@ class Controlador {
   }
 
   obtenerEstadoActual(tipo) {
-    const state = JSON.stringify(Blockly.serialization.workspaces.save(this.workspace[tipo]))
+    const state = JSON.stringify(Blockly.serialization.workspaces.save(this.workspaces[tipo].workspace))
     this.estadoWorkspaceActual(state)
   }
 
@@ -388,10 +377,10 @@ class Controlador {
     this.estadoWorkspaceActual(state)
   }
 
-  generarCodigoPrefijado(prefijo = this.prefijo, sufijo = this.sufijo,tipo) {
+  generarCodigoPrefijado(prefijo = this.prefijo, sufijo = this.sufijo, tipo) {
     this.setearPrefijoBloques(prefijo);
     this.setearSufijoBloques(sufijo);
-    return Blockly.JavaScript.workspaceToCode(this.workspace[tipo]);
+    return Blockly.JavaScript.workspaceToCode(this.workspaces[tipo].workspace);
   }
 
   // METODOS EJECUCION/ITERACION/INTERPRETE
@@ -461,75 +450,75 @@ class Controlador {
     this.test.listaDeErrores.push(`El bloque ${nombreBloque} debe contener al menos un bloque`)
     this.juego.personajePrincipal.terminar()
   }
-  corroborarTieneHijosRepeatTimes(blockRepeatTimes) {
-    if (blockRepeatTimes?.length == 0 || !blockRepeatTimes) { return }
-    let childrenBlock = blockRepeatTimes.getChildren();
-    let descendientesTodos = blockRepeatTimes.getDescendants()
-    let nextBlock = blockRepeatTimes.getNextBlock()
-    // console.log(blockRepeatTimes.getParent())
+  // corroborarTieneHijosRepeatTimes(blockRepeatTimes) {
+  //   if (blockRepeatTimes?.length == 0 || !blockRepeatTimes) { return }
+  //   let childrenBlock = blockRepeatTimes.getChildren();
+  //   let descendientesTodos = blockRepeatTimes.getDescendants()
+  //   let nextBlock = blockRepeatTimes.getNextBlock()
+  //   // console.log(blockRepeatTimes.getParent())
 
-    if (childrenBlock?.length >= 2) {
-      // console.log("hay bloques hijos")
-      blockRepeatTimes.setWarningText(null)
-    }
-    if (childrenBlock?.length == 1) {
-      // console.log("childrenBlock es 1")
-      if (nextBlock?.id == childrenBlock[0].id) {
-        // console.log("el children es el next-error")
-        blockRepeatTimes.setWarningText("Este bloque no puede estar vacío")
-        this.abrirLaBubbleWarning("repeat_times", blockRepeatTimes)
-      } else {
-        // console.log("el children es hijo-ok")
-      }
-    }
-    if (descendientesTodos?.length == 1) {
-      // console.log("hay solo 1 repeat, es el mismo, y esta vacio")
-      // console.log("abrir la bubble")
-      this.abrirLaBubbleWarning("repeat_times", blockRepeatTimes)
-    }
-    if (blockRepeatTimes?.getParent()?.type != "on_execute") {
-      // console.log("el bloque recibido tiene otro padre que no es el on_execute")
-    }
-  }
+  //   if (childrenBlock?.length >= 2) {
+  //     // console.log("hay bloques hijos")
+  //     blockRepeatTimes.setWarningText(null)
+  //   }
+  //   if (childrenBlock?.length == 1) {
+  //     // console.log("childrenBlock es 1")
+  //     if (nextBlock?.id == childrenBlock[0].id) {
+  //       // console.log("el children es el next-error")
+  //       blockRepeatTimes.setWarningText("Este bloque no puede estar vacío")
+  //       this.abrirLaBubbleWarning("repeat_times", blockRepeatTimes)
+  //     } else {
+  //       // console.log("el children es hijo-ok")
+  //     }
+  //   }
+  //   if (descendientesTodos?.length == 1) {
+  //     // console.log("hay solo 1 repeat, es el mismo, y esta vacio")
+  //     // console.log("abrir la bubble")
+  //     this.abrirLaBubbleWarning("repeat_times", blockRepeatTimes)
+  //   }
+  //   if (blockRepeatTimes?.getParent()?.type != "on_execute") {
+  //     // console.log("el bloque recibido tiene otro padre que no es el on_execute")
+  //   }
+  // }
 
-  corroborarTienehijosBloquesConSensor(nombreBloque, block) {
-    if (!block) { return }
-    const sensor = block?.getChildren("LTR").find((b) => b.styleName_ == "sensor_blocks")
-    let childrenBlock = block?.getChildren().filter(b => b.styleName_ !== "sensor_blocks")
-    let descendientesTodos = block?.getDescendants()
-    let nextBlock = block?.getNextBlock()
-    //corroborar que no sea huerfano
-    // let warningIcon = block.getIcon("warning");
-    // warningIcon.setBubbleVisible(true)
-    if (!sensor) {
-      let warningIcon = block.getIcon("warning");
-      warningIcon.setBubbleVisible(true)
-      this.test.listaDeErrores.push(`El bloque ${nombreBloque} no puede estar sin condición`)
-      this.juego.personajePrincipal.terminar()
-    }
-    if (childrenBlock.length == 0 && !nextBlock) {
-      // console.log("children es 0")
-      this.abrirLaBubbleWarning(nombreBloque, block)
-    }
-    if (childrenBlock?.length >= 2) {
-      // console.log("hay bloques hijos")
-      block.setWarningText(null)
-    }
-    if (childrenBlock?.length == 1) {
-      // console.log("childrenBlock es 1")
-      if (nextBlock?.id == childrenBlock[0].id) {
-        // console.log("el children es el next-error")
-        block.setWarningText("Este bloque no puede estar vacío")
-        this.abrirLaBubbleWarning(nombreBloque, block)
-      } else {
-        // console.log("el children es hijo-ok")
-      }
-    }
-    if (descendientesTodos?.length == 1) {
-      // console.log("hay solo 1 repeat, es el mismo, y esta vacio")
-      this.abrirLaBubbleWarning(nombreBloque, block)
-    }
-  }
+  // corroborarTienehijosBloquesConSensor(nombreBloque, block) {
+  //   if (!block) { return }
+  //   const sensor = block?.getChildren("LTR").find((b) => b.styleName_ == "sensor_blocks")
+  //   let childrenBlock = block?.getChildren().filter(b => b.styleName_ !== "sensor_blocks")
+  //   let descendientesTodos = block?.getDescendants()
+  //   let nextBlock = block?.getNextBlock()
+  //   //corroborar que no sea huerfano
+  //   // let warningIcon = block.getIcon("warning");
+  //   // warningIcon.setBubbleVisible(true)
+  //   if (!sensor) {
+  //     let warningIcon = block.getIcon("warning");
+  //     warningIcon.setBubbleVisible(true)
+  //     this.test.listaDeErrores.push(`El bloque ${nombreBloque} no puede estar sin condición`)
+  //     this.juego.personajePrincipal.terminar()
+  //   }
+  //   if (childrenBlock.length == 0 && !nextBlock) {
+  //     // console.log("children es 0")
+  //     this.abrirLaBubbleWarning(nombreBloque, block)
+  //   }
+  //   if (childrenBlock?.length >= 2) {
+  //     // console.log("hay bloques hijos")
+  //     block.setWarningText(null)
+  //   }
+  //   if (childrenBlock?.length == 1) {
+  //     // console.log("childrenBlock es 1")
+  //     if (nextBlock?.id == childrenBlock[0].id) {
+  //       // console.log("el children es el next-error")
+  //       block.setWarningText("Este bloque no puede estar vacío")
+  //       this.abrirLaBubbleWarning(nombreBloque, block)
+  //     } else {
+  //       // console.log("el children es hijo-ok")
+  //     }
+  //   }
+  //   if (descendientesTodos?.length == 1) {
+  //     // console.log("hay solo 1 repeat, es el mismo, y esta vacio")
+  //     this.abrirLaBubbleWarning(nombreBloque, block)
+  //   }
+  // }
 
   verificarBloquePadreTengaHijos(nombrePadre) { // padre = "on_execute" -> fn global para la verificacion de hijos en bloques puntuales
     let arrTopBlocks = this.obtenerbloque(nombrePadre)
@@ -575,134 +564,111 @@ class Controlador {
     return cantidad
   }
 
-  obtenerNumeroDeRepeticiones(bloque) {//funciona para el repeat_times, TODO:probar con otros bloques
-    let arrTopBlocks = this.obtenerbloque(bloque)
-    let numeroVeces = 0
-    if (arrTopBlocks.length != 0) {
-      let listaDeInputs = arrTopBlocks[0]?.inputList[0]?.fieldRow
-      listaDeInputs.forEach(bloque => {
-        if (bloque?.name == "cantidadRepeticiones") {
-          numeroVeces = bloque.value_
-        }
-      })
-    }
-    //Si devuelve "0" es porque no existe el bloque directamente
-    return numeroVeces
-  }
-  recorrerPasos(sincronico = true, callback = this.callbackInterprete) {
-    const necesitaReiniciar = this.necesitaEsperarReinicio;
-    this.juego?.reiniciar();
-    this.test.ejecucionSincronica && this.test.callbackSincronico(this.juego, this.test.listaDePersonajesVieja)
-    this.necesitaEsperarReinicio = true;
-    this.juego?.setearSincronicidad(sincronico);
-    this.anularInterpreteIterativo();
-    this.quitarTodosLosResaltados();
-    this.cuadroOutput?.blanquearTodo();
-    this.cuadroOutput?.marcarInicio();
-    let codigoActualCrudo = this.generarCodigoCrudo("HTML");
-    if (this.panelCodigoGenerado) {
-      this.panelCodigoGenerado.value = codigoActualCrudo;
-    }
-    let codigoActual = sincronico
-      ? codigoActualCrudo
-      : this.generarCodigoPrefijado();
-    this.interpreteIterativo = this.crearInterprete(codigoActual, callback);
-    this.hayCodigoPendiente = true;
-    this.hacerPausaResaltar = false;
-    this.hacerPausaQuitarResaltado = false;
-    this.debeDetenerEjecucion = false;
-    if (sincronico || !necesitaReiniciar) {
-      this.hacerPasosHastaBandera();
-    } else {
-      setTimeout(() => {
-        this.hacerPasosHastaBandera();
-      }, this.velocidad + 10);
-    }
-  }
+  // obtenerNumeroDeRepeticiones(bloque) {//funciona para el repeat_times, TODO:probar con otros bloques
+  //   let arrTopBlocks = this.obtenerbloque(bloque)
+  //   let numeroVeces = 0
+  //   if (arrTopBlocks.length != 0) {
+  //     let listaDeInputs = arrTopBlocks[0]?.inputList[0]?.fieldRow
+  //     listaDeInputs.forEach(bloque => {
+  //       if (bloque?.name == "cantidadRepeticiones") {
+  //         numeroVeces = bloque.value_
+  //       }
+  //     })
+  //   }
+  //   //Si devuelve "0" es porque no existe el bloque directamente
+  //   return numeroVeces
+  // }
+  // recorrerPasos(sincronico = true, callback = this.callbackInterprete) {
+  //   const necesitaReiniciar = this.necesitaEsperarReinicio;
+  //   this.juego?.reiniciar();
+  //   this.test.ejecucionSincronica && this.test.callbackSincronico(this.juego, this.test.listaDePersonajesVieja)
+  //   this.necesitaEsperarReinicio = true;
+  //   this.juego?.setearSincronicidad(sincronico);
+  //   this.anularInterpreteIterativo();
+  //   this.quitarTodosLosResaltados();
+  //   this.cuadroOutput?.blanquearTodo();
+  //   this.cuadroOutput?.marcarInicio();
+  //   let codigoActualCrudo = this.generarCodigoCrudo("HTML");
+  //   if (this.panelCodigoGenerado) {
+  //     this.panelCodigoGenerado.value = codigoActualCrudo;
+  //   }
+  //   let codigoActual = sincronico
+  //     ? codigoActualCrudo
+  //     : this.generarCodigoPrefijado();
+  //   this.interpreteIterativo = this.crearInterprete(codigoActual, callback);
+  //   this.hayCodigoPendiente = true;
+  //   this.hacerPausaResaltar = false;
+  //   this.hacerPausaQuitarResaltado = false;
+  //   this.debeDetenerEjecucion = false;
+  //   if (sincronico || !necesitaReiniciar) {
+  //     this.hacerPasosHastaBandera();
+  //   } else {
+  //     setTimeout(() => {
+  //       this.hacerPasosHastaBandera();
+  //     }, this.velocidad + 10);
+  //   }
+  // }
 
   cerrarModalAbierto() {
     this.juego?.datosModal && this.juego.ocultarModal(this.juego.datosModal)
     this.juego?.datosModalIncorrecto && this.juego.ocultarModal(this.juego.datosModalIncorrecto)
   }
 
-  hacerPasosHastaBandera() {
-    if (this.hacerPausaQuitarResaltado) { return }
-    if (this.debeDetenerEjecucion) { return }
-    this.hacerPausaResaltar = false;
-    while (
-      this.hayCodigoPendiente &&
-      !this.hacerPausaResaltar &&
-      !this.hacerPausaQuitarResaltado &&
-      !this.debeDetenerEjecucion
-    ) {
-      this.hayCodigoPendiente = this.interpreteIterativo.step();
-      if (!this.juego?.puedeDebeContinuar) {
-        this.debeDetenerEjecucion = true;
-      }
-    }
-    // Si corta el while (por banderas o muerte)
-    if (this.hayCodigoPendiente) {
-      if (this.hacerPausaResaltar) {
-        setTimeout(() => {
-          this.hacerPasosHastaBandera();
-        }, 50);
-      } else if (this.debeDetenerEjecucion) {
-        this.finalizarHacerPasos()
-      }
-    } else {
-      this.finalizarHacerPasos()
-    }
-  }
+  // hacerPasosHastaBandera() {
+  //   if (this.hacerPausaQuitarResaltado) { return }
+  //   if (this.debeDetenerEjecucion) { return }
+  //   this.hacerPausaResaltar = false;
+  //   while (
+  //     this.hayCodigoPendiente &&
+  //     !this.hacerPausaResaltar &&
+  //     !this.hacerPausaQuitarResaltado &&
+  //     !this.debeDetenerEjecucion
+  //   ) {
+  //     this.hayCodigoPendiente = this.interpreteIterativo.step();
+  //     if (!this.juego?.puedeDebeContinuar) {
+  //       this.debeDetenerEjecucion = true;
+  //     }
+  //   }
+  //   // Si corta el while (por banderas o muerte)
+  //   if (this.hayCodigoPendiente) {
+  //     if (this.hacerPausaResaltar) {
+  //       setTimeout(() => {
+  //         this.hacerPasosHastaBandera();
+  //       }, 50);
+  //     } else if (this.debeDetenerEjecucion) {
+  //       this.finalizarHacerPasos()
+  //     }
+  //   } else {
+  //     this.finalizarHacerPasos()
+  //   }
+  // }
 
-  finalizarHacerPasos() {
-    this.test.ejecutarElTest && this.test.init()
-    this.cuadroOutput?.marcarFin(); //coding
-    setTimeout(() => {
-      this.detenerEjecucion();
-    }, 400);
-  }
+  // finalizarHacerPasos() {
+  //   this.test.ejecutarElTest && this.test.init()
+  //   this.cuadroOutput?.marcarFin(); //coding
+  //   setTimeout(() => {
+  //     this.detenerEjecucion();
+  //   }, 400);
+  // }
   //Funcion para ejecutar al finalizar la recorrida de cada bloque
 
   // test(){
   //   this.juego.personajePrincipal?.ganarSiPasaTest()
   //   }
 
-  // WORKSPACE - GESTION EVENTOS DE CAMBIO
 
-  removerEventoCambioWorkspace(eventId,tipo) {
-    this.eventoCambioWorkspaceActual && this.workspace[tipo].removeChangeListener(eventId)
-   
+
+  habilitarDesactivarHuerfanos(tipo) {
+    this.desactivaHuerfanos = true;
+    this.eventoHuerfanos = this.workspaces[tipo].workspace.addChangeListener(
+      Blockly.Events.disableOrphans
+    );
   }
 
-  removerEventoCambioWorkspaceActual() {
-    this.removerEventoCambioWorkspace(this.eventoCambioWorkspaceActual);
+  inhabilitarDesactivarHuerfanos(tipo) {
+    this.desactivaHuerfanos = false;
+    this.workspaces[tipo].workspace.removeChangeListener(this.eventoHuerfanos);
   }
-
-  setearEventoCambioWorkspace(callback,tipo) {
-    // this.eventoCambioWorkspaceActual
-    //   ? this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
-    //   : null;
-    this.eventoCambioWorkspaceActual && this.workspace[tipo].removeChangeListener(this.eventoCambioWorkspaceActual)
-    
-    this.eventoCambioWorkspaceActual = this.workspace[tipo].addChangeListener(callback);
-    console.log(this.eventoCambioWorkspaceActual)
-  }
-
-  setearEventoCambioWorkspaceStandard(tipo) {
-    this.setearEventoCambioWorkspace(this.callbackCambioWorkspaceStandard, tipo);
-  }
-
-  // habilitarDesactivarHuerfanos() {
-  //   this.desactivaHuerfanos = true;
-  //   this.eventoHuerfanos = this.workspaceHTML.addChangeListener(
-  //     Blockly.Events.disableOrphans
-  //   );
-  // }
-
-  // inhabilitarDesactivarHuerfanos() {
-  //   this.desactivaHuerfanos = false;
-  //   this.workspace.removeChangeListener(this.eventoHuerfanos);
-  // }
   // habilitarEdicionWorkspace() {
   //   this.workspace.options.readOnly = false;
   // }
@@ -813,7 +779,7 @@ export default class ControladorStandard extends Controlador {
 }
 
 class MostradorOutput {
-  constructor(elemetoPadre,elementoTextArea) {
+  constructor(elemetoPadre, elementoTextArea) {
     this.elemento = elementoTextArea;
     this.elementoPadre = elemetoPadre;
     this.blanquearTodo();

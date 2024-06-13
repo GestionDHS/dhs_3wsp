@@ -92,7 +92,7 @@ const div_body_bloque = document.querySelector(".body_bloque")
 const div_body_codigo = document.querySelector(".body_codigo")
 const div_navegador = document.querySelector(".navegador")
 
-function prenderBtnSegunDiv(btn) {
+function prenderBotoneraSegunDiv(btn) {
    const lista_id = btn.id == "btn-codigo" ? ["#codigo-html", "#codigo-css", "#codigo-js"] : ["#wsp-html", "#wsp-css", "#wsp-js"]
    lista_id.forEach(elemento => {
       const elemento_ventana = document.querySelector(elemento);
@@ -102,7 +102,7 @@ function prenderBtnSegunDiv(btn) {
       }
    })
 }
-function handelClickVisibilityPanels(e) {
+function manejadorVisibilidadPanel(e) {
    //el e es el btn
    const dicionario_ventana = { "btn-bloque": '.body_bloque', "btn-codigo": '.body_codigo', "btn-navegador": '.navegador', "btn-consola": ".ventana_consola" }
    const elemento_ventana = document.querySelector(dicionario_ventana[e.target.id]);
@@ -129,8 +129,8 @@ function handelClickVisibilityPanels(e) {
       console.log("render btn grandes")
       div_bloque_codigo.classList.remove("hidden")
       div_bloque_codigo.classList.remove("fondo_gris")
-      btnsMayores["btn-bloque"].classList.contains("button_focus") && prenderBtnSegunDiv(e.target)
-      btnsMayores["btn-codigo"].classList.contains("button_focus") && prenderBtnSegunDiv(e.target)
+      btnsMayores["btn-bloque"].classList.contains("button_focus") && prenderBotoneraSegunDiv(e.target)
+      btnsMayores["btn-codigo"].classList.contains("button_focus") && prenderBotoneraSegunDiv(e.target)
    }
 
    //Si el btn Navegador esta apagado, ocultamos el resizer1
@@ -148,7 +148,7 @@ function handelClickVisibilityPanels(e) {
 }
 
 //fn para dentro del div bloques-codigo (div izquierdo grande)
-function handelClickVisibilityWorkSpaces(e) {
+function manejadorVisibilidadWorkspace(e) {
    //Adentro de bloques-codigo
    const lista_elementos_btns = [btnsMenores["btn-html"], btnsMenores["btn-css"], btnsMenores["btn-js"]]
    //deshabilito todos los btns de bloques-codigo para luego habilitar solo el cliqueado
@@ -182,11 +182,11 @@ function handelClickVisibilityWorkSpaces(e) {
    elemento_ventana_codigo.classList.remove("hidden")
 }
 
-btnsMayores["btn-bloque"].addEventListener("click", handelClickVisibilityPanels);
-btnsMayores["btn-codigo"].addEventListener("click", handelClickVisibilityPanels);
-btnsMayores["btn-navegador"].addEventListener("click", handelClickVisibilityPanels);
-btnsMenores['btn-consola'].addEventListener("click", handelClickVisibilityPanels);
-btnsMenores["btn-html"].addEventListener("click", handelClickVisibilityWorkSpaces)
-btnsMenores["btn-css"].addEventListener("click", handelClickVisibilityWorkSpaces)
-btnsMenores["btn-js"].addEventListener("click", handelClickVisibilityWorkSpaces)
+btnsMayores["btn-bloque"].addEventListener("click", manejadorVisibilidadPanel);
+btnsMayores["btn-codigo"].addEventListener("click", manejadorVisibilidadPanel);
+btnsMayores["btn-navegador"].addEventListener("click", manejadorVisibilidadPanel);
+btnsMenores['btn-consola'].addEventListener("click", manejadorVisibilidadPanel);
+btnsMenores["btn-html"].addEventListener("click", manejadorVisibilidadWorkspace)
+btnsMenores["btn-css"].addEventListener("click", manejadorVisibilidadWorkspace)
+btnsMenores["btn-js"].addEventListener("click", manejadorVisibilidadWorkspace)
 
