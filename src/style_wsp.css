@@ -229,9 +229,10 @@
   /* el body o main de bloque_codigo */
   .body_bloque_codigo {
     display: flex;
-    height: 100%;
+    height: 90%;
     width: 100%;
     top:65px;
+    overflow:hidden;
   }
   .body_bloque{
     position: relative;
@@ -244,6 +245,7 @@
   .ventana_bloques {
     width: 100%;
     height: 100%;
+    /* overflow: hidden; */
     & > div{
       background-color: #1a1a1a;
       width: 100%;
@@ -385,3 +387,8 @@
 .injectionDiv{
   overflow: scroll;
 }
+
+/* .blocklySvg{
+  height: 90%;
+  overflow: hidden;
+} */

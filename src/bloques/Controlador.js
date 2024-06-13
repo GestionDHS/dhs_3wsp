@@ -223,16 +223,16 @@ class Controlador {
       return Blockly.serialization.workspaces.save(this.workspaces[tipo]);
     }
   }
-  cargarBloquesSerializados(bloquesSerializados, tipo) {
-    //Pia -----
-    const state = Blockly.serialization.workspaces.save(this.workspaces[tipo].workspace);
-    return Blockly.serialization.workspaces.load(
-      state,
-      this.workspaces[tipo].workspace)
-    //Fin Pía -----------------
+  cargarBloquesSerializados(bloquesSerializados, tipo) { // No entiendo
+    //Pia ----- obtenerBloquesSerializados ???
+    // const state = Blockly.serialization.workspaces.save(this.workspaces[tipo].workspace);
     // return Blockly.serialization.workspaces.load(
-    //   bloquesSerializados,
+    //   state,
     //   this.workspaces[tipo].workspace)
+    //Fin Pía -----------------
+    return Blockly.serialization.workspaces.load(
+      bloquesSerializados,
+      this.workspaces[tipo].workspace)
   }
   setearYCargarBloquesIniciales(bloquesSerealizados, tipo) {
     if (tipo === "HTML") {
