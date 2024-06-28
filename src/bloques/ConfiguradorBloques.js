@@ -8,57 +8,71 @@ import Swal from "sweetalert2";
 
 export default class ConfiguradorBloques {
     constructor() {
-        this.toolboxHTML = {
-            kind: "categoryToolbox",
-            contents: []
-        }
-        this.toolboxCSS= {
+      this.toolboxes ={
+        HTML:{
           kind: "categoryToolbox",
           contents: []
+        },
+        CSS:{
+          kind: "categoryToolbox",
+          contents: []
+        },
+        JS:{
+          kind: "categoryToolbox",
+          contents: []
+        }
       }
-      this.toolboxJS = {
-        kind: "categoryToolbox",
-        contents: []
-    }
+    //     this.toolboxHTML = {
+    //         kind: "categoryToolbox",
+    //         contents: []
+    //     }
+    //     this.toolboxCSS= {
+    //       kind: "categoryToolbox",
+    //       contents: []
+    //   }
+    //   this.toolboxJS = {
+    //     kind: "categoryToolbox",
+    //     contents: []
+    // }
 
         this.galeria = new DHS_Gallery
     }
 
     crearCategoriaToolbox(datosCategoria,tipo) {
-      if(tipo==="HTML"){
-        this.toolboxHTML.contents.push({
+    
+        this.toolboxes[tipo].contents.push({
           kind: "category",
           name: datosCategoria.name,
           categorystyle: datosCategoria.categorystyle,
           contents: [],
       })
-      }
+    console.log(this.toolboxes[tipo])
   
-      if(tipo==="CSS"){
-        this.toolboxCSS.contents.push({
-          kind: "category",
-          name: datosCategoria.name,
-          categorystyle: datosCategoria.categorystyle,
-          contents: [],
-      })}
+      // if(tipo==="CSS"){
+      //   this.toolboxCSS.contents.push({
+      //     kind: "category",
+      //     name: datosCategoria.name,
+      //     categorystyle: datosCategoria.categorystyle,
+      //     contents: [],
+      // })}
   
-      if(tipo==="JS"){
-        this.toolboxJS.contents.push({
-          kind: "category",
-          name: datosCategoria.name,
-          categorystyle: datosCategoria.categorystyle,
-          contents: [],
-      })
-      }
+      // if(tipo==="JS"){
+      //   this.toolboxJS.contents.push({
+      //     kind: "category",
+      //     name: datosCategoria.name,
+      //     categorystyle: datosCategoria.categorystyle,
+      //     contents: [],
+      // })
+      // }
        
     }
 
     configurarUnBloqueCustomStandard(keywordBloque, nombreCategoria = "Acciones",tipo) {
-      if(tipo==="HTML"){
+      // if(tipo==="HTML"){
         if (!this[keywordBloque]) {
           throw new Error("No tenemos un método para configurar bloques que coincida con la keyowrd " + keywordBloque);
       }
-      let categoriaBuscada = this.toolboxHTML.contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
+      let categoriaBuscada = this.toolboxes[tipo].contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
       if (!categoriaBuscada) {
           throw new Error("No existe la categoría " + nombreCategoria + " en la toolbox");
       } else {
@@ -70,42 +84,42 @@ export default class ConfiguradorBloques {
           }
       }
       // console.log(this.toolboxHTML.contents)
-      }
+      // }
   
-      if(tipo==="CSS"){
-        if (!this[keywordBloque]) {
-          throw new Error("No tenemos un método para configurar bloques que coincida con la keyowrd " + keywordBloque);
-      }
-      let categoriaBuscada = this.toolboxCSS.contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
-      if (!categoriaBuscada) {
-          throw new Error("No existe la categoría " + nombreCategoria + " en la toolbox");
-      } else {
-          let generacionBloque = this[keywordBloque]();
-          if (Array.isArray(generacionBloque)) {
-              categoriaBuscada.contents.push(...generacionBloque);
-          } else {
-              categoriaBuscada.contents.push(generacionBloque)
-          }
-      }
-      // console.log(this.toolboxCSS.contents)
-    }
+    //   if(tipo==="CSS"){
+    //     if (!this[keywordBloque]) {
+    //       throw new Error("No tenemos un método para configurar bloques que coincida con la keyowrd " + keywordBloque);
+    //   }
+    //   let categoriaBuscada = this.toolboxCSS.contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
+    //   if (!categoriaBuscada) {
+    //       throw new Error("No existe la categoría " + nombreCategoria + " en la toolbox");
+    //   } else {
+    //       let generacionBloque = this[keywordBloque]();
+    //       if (Array.isArray(generacionBloque)) {
+    //           categoriaBuscada.contents.push(...generacionBloque);
+    //       } else {
+    //           categoriaBuscada.contents.push(generacionBloque)
+    //       }
+    //   }
+    //   // console.log(this.toolboxCSS.contents)
+    // }
   
-      if(tipo==="JS"){
-        if (!this[keywordBloque]) {
-          throw new Error("No tenemos un método para configurar bloques que coincida con la keyowrd " + keywordBloque);
-      }
-      let categoriaBuscada = this.toolboxJS.contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
-      if (!categoriaBuscada) {
-          throw new Error("No existe la categoría " + nombreCategoria + " en la toolbox");
-      } else {
-          let generacionBloque = this[keywordBloque]();
-          if (Array.isArray(generacionBloque)) {
-              categoriaBuscada.contents.push(...generacionBloque);
-          } else {
-              categoriaBuscada.contents.push(generacionBloque)
-          }
-      }
-      }
+      // if(tipo==="JS"){
+      //   if (!this[keywordBloque]) {
+      //     throw new Error("No tenemos un método para configurar bloques que coincida con la keyowrd " + keywordBloque);
+      // }
+      // let categoriaBuscada = this.toolboxJS.contents.find(obj => obj.kind == "category" && obj.name == nombreCategoria);
+      // if (!categoriaBuscada) {
+      //     throw new Error("No existe la categoría " + nombreCategoria + " en la toolbox");
+      // } else {
+      //     let generacionBloque = this[keywordBloque]();
+      //     if (Array.isArray(generacionBloque)) {
+      //         categoriaBuscada.contents.push(...generacionBloque);
+      //     } else {
+      //         categoriaBuscada.contents.push(generacionBloque)
+      //     }
+      // }
+      // }
    
     }
 
@@ -123,6 +137,10 @@ export default class ConfiguradorBloques {
         return methods;
     }
 
+    getToolbox(tipo){
+      console.log(this.toolboxes[tipo])
+      return this.toolboxes[tipo]
+    }
     // --- METODOS DE CONFIGURACION DE BLOQUE ---
     // C/U hace: 
     /*

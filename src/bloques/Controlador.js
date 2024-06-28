@@ -3,6 +3,8 @@ import Swal from "sweetalert2";
 import { htmlGenerator } from '../generators/htmlGenerator';
 import { cssGenerator } from '../generators/cssGenerator';
 import ClassWorkspace from "../clases/Class-workspace";
+import miEstado from "../clases/Service-estado"
+import { toolbox } from "../toolboxes/toolboxes";
 
 
 class Controlador {
@@ -160,11 +162,14 @@ class Controlador {
       }
     };
     this.eventoCambioWorkspaceActual = null;
+
+    //PIA
+    this.estado = miEstado
   }
   // FIN CONSTRUCTOR
 
   // METODOS PARA EL WORKSPACE - SERIALIZACION
-
+//nuevo Pía
   crearInyectarWorkspace(categoriaElegida,
     ordenJerarquicoBloques,
     bloquesPrecargadosJSON,
@@ -178,25 +183,20 @@ class Controlador {
         this.ConfiguradorBloques.configurarUnBloqueCustomStandard(...bl, tipo);
       });
     const instanciaClassWsp = new ClassWorkspace(idElemento, tipo)
+    //this.estado.setState(lenguaje,propiedad,valor)
+    this.estado.setState(tipo,"idWorkspaceInject",idElemento)
+    this.estado.setState(tipo,"wsp",instanciaClassWsp)
+    this.estado.setState(tipo,"toolbox",toolbox(tipo,this.ConfiguradorBloques))
+    console.log(this.ConfiguradorBloques.getToolbox(tipo))
+    //falta el JSON con los bloques del alumno
     this.workspaces[tipo] = instanciaClassWsp
     this.tipo = tipo
-    instanciaClassWsp.init({
-      toolbox: tipo == "HTML" ? this.ConfiguradorBloques.toolboxHTML: (tipo == "CSS") ? this.ConfiguradorBloques.toolboxCSS: this.ConfiguradorBloques.toolboxJS,
-      theme: "themeDH",
-      zoom: {
-        controls: true,
-        wheel: true,
-        pinch: true,
-      },
-      resize: true,
-      parentWidth: null,
-      parentHeight: null
-    })
+    instanciaClassWsp.init(toolbox(tipo,this.ConfiguradorBloques))
 
     const newWidth = "100%";
     const newHeight = "100%";
-    console.log(this.workspaces.HTML)
-    console.log(this.workspaces.CSS)
+    // console.log(this.workspaces.HTML)
+    // console.log(this.workspaces.CSS)
     this.workspaces.HTML && Blockly.svgResize(this.workspaces.HTML.workspace, newWidth, newHeight);
     this.workspaces.CSS && Blockly.svgResize(this.workspaces.CSS.workspace, newWidth, newHeight);
 
@@ -274,8 +274,8 @@ class Controlador {
 
     // this.eventoCambioWorkspaceActual = this.workspace[tipo].addChangeListener(callback);
     this.eventoCambioWorkspaceActual = this.workspaces[tipo].workspace.addChangeListener(callback);
-    console.log(tipo)
-    console.log(this.eventoCambioWorkspaceActual)
+    // console.log(tipo)
+    // console.log(this.eventoCambioWorkspaceActual)
   }
 
   setearEventoCambioWorkspaceStandard(tipo) {
