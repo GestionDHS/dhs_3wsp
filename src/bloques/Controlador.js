@@ -187,7 +187,6 @@ class Controlador {
     this.estado.setState(tipo,"idWorkspaceInject",idElemento)
     this.estado.setState(tipo,"wsp",instanciaClassWsp)
     this.estado.setState(tipo,"toolbox",toolbox(tipo,this.ConfiguradorBloques))
-    console.log(this.ConfiguradorBloques.getToolbox(tipo))
     //falta el JSON con los bloques del alumno
     this.workspaces[tipo] = instanciaClassWsp
     this.tipo = tipo

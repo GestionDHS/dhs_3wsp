@@ -36,7 +36,6 @@ class Estado {
     }
   
     setState(lenguaje, property, value) {
-        console.log(this.state)
       this.state[lenguaje][property] = value;
     }
         
@@ -44,7 +43,7 @@ class Estado {
       this.setState(lenguaje, key, value);
     }
   }
-  
+
 const miEstado = new Estado()
 export default miEstado
 
